@@ -3,6 +3,11 @@
 namespace Config;
 
 use CodeIgniter\Config\BaseService;
+use League\OAuth2\Server\ResourceServer;
+use League\OAuth2\Server\AuthorizationServer;
+use App\Libraries\OAuth2\Repo\ClientRepository;
+use App\Libraries\OAuth2\Repo\AccessTokenRepository;
+use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 
 /**
  * Services Configuration file.
@@ -34,5 +39,34 @@ class Services extends BaseService {
             return static::getSharedInstance('oauth2Server');
         }
 
+        // prepare repositories
+        $clientRepo = new ClientRepository();
+        $tokenRepo  = new AccessTokenRepository();
+
+        $privatekey = $_ENV['encryption.openssl.keypath'];
+        $encrytkey  = '';
+        $server     = new AuthorizationServer(
+            $clientRepo,
+            $tokenRepo,
+            null,
+            $privatekey,
+            $encrytkey
+        );
+
+        // set grant
+        $server->enableGrantType(new ClientCredentialsGrant(), new \DateInterval('P50D'));
+
+        return $server;
+    }
+
+    public static function oauth2ResServer($getShared = true) {
+        if ($getShared) {
+            return static::getSharedInstance('oauth2Server');
+        }
+
+        $publickey = $_ENV['encryption.openssl.keypath']; // same path because same host
+        $server    = new ResourceServer(new AccessTokenRepository(), $publickey);
+
+        return $server;
     }
 }

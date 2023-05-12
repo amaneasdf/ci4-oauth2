@@ -13,6 +13,11 @@ class AddOauthReqTable extends Migration {
                 'constraint' => '80',
                 'null'       => false,
             ],
+            'client_name'   => [
+                'type'       => 'VARCHAR',
+                'constraint' => '80',
+                'null'       => true,
+            ],
             'client_secret' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '80',
@@ -34,6 +39,21 @@ class AddOauthReqTable extends Migration {
             'user_id'       => [
                 'type'       => 'VARCHAR',
                 'constraint' => '80',
+                'null'       => true,
+            ],
+            'created_at'    => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'updated_at'    => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'deleted_at'    => [
+                'type'       => 'INT',
+                'constraint' => '11',
                 'null'       => true,
             ],
         ]);
@@ -64,6 +84,21 @@ class AddOauthReqTable extends Migration {
             'scope'        => [
                 'type' => 'TEXT',
                 'null' => true,
+            ],
+            'created_at'   => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'updated_at'   => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'deleted_at'   => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
             ],
         ]);
         $this->forge->addPrimaryKey('access_token');
@@ -102,6 +137,21 @@ class AddOauthReqTable extends Migration {
                 'type' => 'TEXT',
                 'null' => true,
             ],
+            'created_at'         => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'updated_at'         => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'deleted_at'         => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
         ]);
         $this->forge->addPrimaryKey('authorization_code');
         $this->forge->createTable('oauth_authorization_codes');
@@ -130,6 +180,21 @@ class AddOauthReqTable extends Migration {
             'scope'         => [
                 'type' => 'TEXT',
                 'null' => true,
+            ],
+            'created_at'    => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'updated_at'    => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'deleted_at'    => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
             ],
         ]);
         $this->forge->addPrimaryKey('refresh_token');
@@ -171,6 +236,21 @@ class AddOauthReqTable extends Migration {
                 'type' => 'TEXT',
                 'null' => true,
             ],
+            'created_at'     => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'updated_at'     => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'deleted_at'     => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
         ]);
         $this->forge->addPrimaryKey('username');
         $this->forge->createTable('oauth_user');
@@ -185,6 +265,21 @@ class AddOauthReqTable extends Migration {
             'is_default' => [
                 'type'       => 'TINYINT',
                 'constraint' => '1',
+                'null'       => true,
+            ],
+            'created_at' => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'updated_at' => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'deleted_at' => [
+                'type'       => 'INT',
+                'constraint' => '11',
                 'null'       => true,
             ],
         ]);
@@ -206,6 +301,21 @@ class AddOauthReqTable extends Migration {
             'public_key' => [
                 'type' => 'TEXT',
                 'null' => false,
+            ],
+            'created_at' => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'updated_at' => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
+            ],
+            'deleted_at' => [
+                'type'       => 'INT',
+                'constraint' => '11',
+                'null'       => true,
             ],
         ]);
         $this->forge->createTable('oauth_jwt');
