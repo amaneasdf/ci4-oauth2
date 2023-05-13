@@ -3,17 +3,18 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-use App\Entities\OAuthClient;
 
-class OAuthClientModel extends Model {
+class OAuthAccessTokenModel extends Model {
     protected $DBGroup          = 'default';
-    protected $table            = 'oauth_clients';
-    protected $primaryKey       = 'client_id';
+    protected $table            = 'oauth_access_tokens';
+    protected $primaryKey       = 'access_token';
     protected $useAutoIncrement = false;
-    protected $returnType       = OAuthClient::class;
-    protected $useSoftDeletes   = true;
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+
+    ];
 
     // Dates
     protected $useTimestamps = true;

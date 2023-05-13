@@ -16,11 +16,6 @@ class ClientRepository implements ClientRepositoryInterface {
     protected $db;
 
     public function __construct( ? ConnectionInterface $db = null) {
-        if (null === $db) {
-            $dbGroup = (new \Config\Database())->defaultGroup;
-            $db      = \Config\Database::connect($dbGroup);
-        }
-
         $this->db = $db;
     }
 

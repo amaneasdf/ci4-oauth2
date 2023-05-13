@@ -2,11 +2,13 @@
 
 namespace App\Libraries\OAuth2\Repo;
 
+use App\Models\OAuthAccessTokenModel;
 use CodeIgniter\Database\ConnectionInterface;
 use App\Libraries\OAuth2\Entities\AccessTokenEntity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
+use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 
 class AccessTokenRepository implements AccessTokenRepositoryInterface {
     /**
@@ -17,11 +19,6 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
     protected $db;
 
     public function __construct( ? ConnectionInterface $db = null) {
-        if (null === $db) {
-            $dbGroup = (new \Config\Database())->defaultGroup;
-            $db      = \Config\Database::connect($dbGroup);
-        }
-
         $this->db = $db;
     }
 
@@ -41,14 +38,41 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
     }
 
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity) {
+        // prepare data
+        $tokenData = [
+            'access_token' => $accessTokenEntity->getIdentifier(),
+            'client_id'    => $accessTokenEntity->getClient()->getIdentifier(),
+            'user_id'      => $accessTokenEntity->getUserIdentifier(),
+            'expires'      => $accessTokenEntity->getExpiryDateTime(),
+            'scope'        => [],
+        ];
+        foreach ($accessTokenEntity->getScopes() as $scope) {
+            $tokenData['scope'] = $scope->getIdentifier();
+        }
+        $tokenData['scope'] = implode(' ', $tokenData['scope']);
 
+        // save token data
+        try {
+            // Initiate Model
+            $tokenModel = new OAuthAccessTokenModel($this->db);
+            $tokenModel->insert($tokenData);
+        } catch (\Throwable $th) {
+            //throw $th;
+            throw new UniqueTokenIdentifierConstraintViolationException($th->getMessage(), $th->getCode(), get_class($th));
+        }
     }
 
     public function revokeAccessToken($tokenId) {
+        // Initiate Model
+        $tokenModel = new OAuthAccessTokenModel($this->db);
 
+        $tokenModel->delete($tokenId);
     }
 
     public function isAccessTokenRevoked($tokenId) {
+        // Initiate Model
+        $tokenModel = new OAuthAccessTokenModel($this->db);
 
+        return null == $tokenModel->find($tokenId);
     }
 }
