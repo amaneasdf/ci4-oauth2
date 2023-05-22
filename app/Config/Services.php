@@ -2,12 +2,14 @@
 
 namespace Config;
 
+use CodeIgniter\Events\Events;
 use CodeIgniter\Config\BaseService;
 use League\OAuth2\Server\ResourceServer;
+use CodeIgniter\Database\ConnectionInterface;
 use League\OAuth2\Server\AuthorizationServer;
+use App\Libraries\OAuth2\Repo\ScopeRepository;
 use App\Libraries\OAuth2\Repo\ClientRepository;
 use App\Libraries\OAuth2\Repo\AccessTokenRepository;
-use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 
 /**
  * Services Configuration file.
@@ -34,27 +36,39 @@ class Services extends BaseService {
      * }
      */
 
-    public static function oauth2Server($getShared = true) {
+    public static function oauth2Server( ? ConnectionInterface $db = null, $getShared = true) {
         if ($getShared) {
             return static::getSharedInstance('oauth2Server');
         }
 
         // prepare repositories
-        $clientRepo = new ClientRepository();
-        $tokenRepo  = new AccessTokenRepository();
+        $clientRepo = new ClientRepository($db);
+        $tokenRepo  = new AccessTokenRepository($db);
+        $scopeRepo  = new ScopeRepository($db);
 
         $privatekey = $_ENV['encryption.openssl.keypath'];
-        $encrytkey  = '';
+        $encryptkey = hex2bin(explode(':', $_ENV['encryption.key'])[1]);
         $server     = new AuthorizationServer(
             $clientRepo,
             $tokenRepo,
-            null,
+            $scopeRepo,
             $privatekey,
-            $encrytkey
+            $encryptkey
         );
 
-        // set grant
-        $server->enableGrantType(new ClientCredentialsGrant(), new \DateInterval('P50D'));
+        // pass emitted OAuth2 event to Codeignter's event handler
+        $server->getEmitter()->addListener(
+            'client.authentication.failed',
+            function (\League\OAuth2\Server\RequestEvent $event) {
+                \CodeIgniter\Events\Events::trigger('oauth2.client.authentication.failed', $event);
+            }
+        );
+        $server->getEmitter()->addListener(
+            'user.authentication.failed',
+            function (\League\OAuth2\Server\RequestEvent $event) {
+                \CodeIgniter\Events\Events::trigger('oauth2.user.authentication.failed', $event);
+            }
+        );
 
         return $server;
     }

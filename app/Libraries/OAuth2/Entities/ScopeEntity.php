@@ -9,4 +9,8 @@ use League\OAuth2\Server\Entities\ScopeEntityInterface;
 class ScopeEntity implements ScopeEntityInterface {
     use EntityTrait;
     use ScopeTrait;
+
+    public function __construct(string $identifier) {
+        $this->identifier = $identifier;
+    }
 }
