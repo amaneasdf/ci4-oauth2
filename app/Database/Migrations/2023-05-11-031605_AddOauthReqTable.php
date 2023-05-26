@@ -85,6 +85,11 @@ class AddOauthReqTable extends Migration {
                 'type' => 'TEXT',
                 'null' => true,
             ],
+            'is_revoked'   => [
+                'type'       => 'TINYINT',
+                'constraint' => '1',
+                'default'    => false,
+            ],
             'created_at'   => [
                 'type'       => 'INT',
                 'constraint' => '11',
@@ -128,9 +133,10 @@ class AddOauthReqTable extends Migration {
                 'type' => 'TEXT',
                 'null' => true,
             ],
-            'id_token'           => [
-                'type' => 'TEXT',
-                'null' => true,
+            'is_revoked'         => [
+                'type'       => 'TINYINT',
+                'constraint' => '1',
+                'default'    => false,
             ],
             'created_at'         => [
                 'type'       => 'INT',
@@ -270,35 +276,6 @@ class AddOauthReqTable extends Migration {
         ]);
         $this->forge->addPrimaryKey('scope');
         $this->forge->createTable('oauth_scope');
-
-        // JWT Table
-        $this->forge->addField([
-            'client_id'  => [
-                'type'       => 'VARCHAR',
-                'constraint' => '80',
-                'null'       => false,
-            ],
-            'subject'    => [
-                'type'       => 'VARCHAR',
-                'constraint' => '80',
-                'null'       => true,
-            ],
-            'public_key' => [
-                'type' => 'TEXT',
-                'null' => false,
-            ],
-            'created_at' => [
-                'type'       => 'INT',
-                'constraint' => '11',
-                'null'       => true,
-            ],
-            'updated_at' => [
-                'type'       => 'INT',
-                'constraint' => '11',
-                'null'       => true,
-            ],
-        ]);
-        $this->forge->createTable('oauth_jwt');
     }
 
     public function down() {
@@ -309,6 +286,5 @@ class AddOauthReqTable extends Migration {
         $this->forge->dropTable('oauth_refresh_tokens');
         $this->forge->dropTable('oauth_user');
         $this->forge->dropTable('oauth_scope');
-        $this->forge->dropTable('oauth_jwt');
     }
 }

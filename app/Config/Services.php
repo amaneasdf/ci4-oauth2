@@ -36,6 +36,11 @@ class Services extends BaseService {
      * }
      */
 
+    /**
+     * @param  null|\CodeIgniter\Database\ConnectionInterface $db
+     * @param  bool                                           $getShared
+     * @return \League\OAuth2\Server\AuthorizationServer
+     */
     public static function oauth2Server( ? ConnectionInterface $db = null, $getShared = true) {
         if ($getShared) {
             return static::getSharedInstance('oauth2Server');

@@ -12,4 +12,7 @@ class AuthCodeEntity implements AuthCodeEntityInterface {
     use TokenEntityTrait;
     use AuthCodeTrait;
 
+    public function __construct() {
+
+    }
 }

@@ -65,14 +65,14 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
     public function revokeAccessToken($tokenId) {
         // Initiate Model
         $tokenModel = new OAuthAccessTokenModel($this->db);
-
-        $tokenModel->delete($tokenId);
+        $tokenModel->update($tokenId, ['is_evoked' => true]);
+        // $tokenModel->delete($tokenId);
     }
 
     public function isAccessTokenRevoked($tokenId) {
         // Initiate Model
         $tokenModel = new OAuthAccessTokenModel($this->db);
-
-        return null == $tokenModel->find($tokenId);
+        $token      = $tokenModel->find($tokenId);
+        return $token['is_evoked'] ?? true;
     }
 }

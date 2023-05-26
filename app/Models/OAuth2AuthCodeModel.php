@@ -4,26 +4,27 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class OAuthAccessTokenModel extends Model {
+class OAuth2AuthCodeModel extends Model {
     protected $DBGroup          = 'default';
-    protected $table            = 'oauth_access_tokens';
-    protected $primaryKey       = 'access_token';
+    protected $table            = 'oauth2authcodes';
+    protected $primaryKey       = 'authorization_code';
     protected $useAutoIncrement = false;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'access_token',
+        'authorization_code',
         'client_id',
         'user_id',
+        'redirect_uri',
         'expires',
         'scope',
         'is_evoked',
     ];
 
     // Dates
-    protected $useTimestamps = true;
-    protected $dateFormat    = 'int';
+    protected $useTimestamps = false;
+    protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
