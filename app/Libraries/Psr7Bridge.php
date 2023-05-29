@@ -33,7 +33,7 @@ class Psr7Bridge {
         parse_str($request->getUri()->getQuery(), $queryArr);
 
         return $psrRequest
-            ->withBody($factory->createStream($request->getBody() ?? 'php://memory'))
+            ->withBody($factory->createStream($request->getBody() ?? ''))
             ->withCookieParams($request->getCookie())
             ->withUploadedFiles($request->getFiles())
             ->withQueryParams($queryArr)
@@ -65,7 +65,7 @@ class Psr7Bridge {
 
         return $psrResponse
             ->withProtocolVersion($response->getProtocolVersion())
-            ->withBody($factory->createStream($response->getBody() ?? 'php://memory'));
+            ->withBody($factory->createStream($response->getBody() ?? ''));
     }
 
     /**
@@ -82,6 +82,9 @@ class Psr7Bridge {
                 // ignore invalid, for convenience
             }
         }
+
+        // rewind response body stream so we could retrive its content from the begining
+        $response->getBody()->rewind();
 
         return $ci4Response
             ->setProtocolVersion($response->getProtocolVersion())

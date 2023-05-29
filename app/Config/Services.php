@@ -2,7 +2,7 @@
 
 namespace Config;
 
-use CodeIgniter\Events\Events;
+use League\OAuth2\Server\CryptKey;
 use CodeIgniter\Config\BaseService;
 use League\OAuth2\Server\ResourceServer;
 use CodeIgniter\Database\ConnectionInterface;
@@ -41,7 +41,7 @@ class Services extends BaseService {
      * @param  bool                                           $getShared
      * @return \League\OAuth2\Server\AuthorizationServer
      */
-    public static function oauth2Server( ? ConnectionInterface $db = null, $getShared = true) {
+    public static function oauth2Server($getShared = true,  ? ConnectionInterface $db = null) {
         if ($getShared) {
             return static::getSharedInstance('oauth2Server');
         }
@@ -51,7 +51,7 @@ class Services extends BaseService {
         $tokenRepo  = new AccessTokenRepository($db);
         $scopeRepo  = new ScopeRepository($db);
 
-        $privatekey = $_ENV['encryption.openssl.keypath'];
+        $privatekey = new CryptKey(__DIR__ . $_ENV['encryption.openssl.keypath']);
         $encryptkey = hex2bin(explode(':', $_ENV['encryption.key'])[1]);
         $server     = new AuthorizationServer(
             $clientRepo,
@@ -78,13 +78,13 @@ class Services extends BaseService {
         return $server;
     }
 
-    public static function oauth2ResServer($getShared = true) {
+    public static function oauth2ResServer($getShared = true,  ? ConnectionInterface $db = null) {
         if ($getShared) {
-            return static::getSharedInstance('oauth2Server');
+            return static::getSharedInstance('oauth2ResServer');
         }
 
-        $publickey = $_ENV['encryption.openssl.keypath']; // same path because same host
-        $server    = new ResourceServer(new AccessTokenRepository(), $publickey);
+        $publickey = new CryptKey(__DIR__ . $_ENV['encryption.openssl.public']);
+        $server    = new ResourceServer(new AccessTokenRepository($db), $publickey);
 
         return $server;
     }

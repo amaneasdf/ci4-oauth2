@@ -43,7 +43,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
             'access_token' => $accessTokenEntity->getIdentifier(),
             'client_id'    => $accessTokenEntity->getClient()->getIdentifier(),
             'user_id'      => $accessTokenEntity->getUserIdentifier(),
-            'expires'      => $accessTokenEntity->getExpiryDateTime(),
+            'expires'      => $accessTokenEntity->getExpiryDateTime()->format('Y-m-d H:i:s'),
             'scope'        => [],
         ];
         foreach ($accessTokenEntity->getScopes() as $scope) {
