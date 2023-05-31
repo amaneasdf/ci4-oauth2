@@ -47,7 +47,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
             'scope'        => [],
         ];
         foreach ($accessTokenEntity->getScopes() as $scope) {
-            $tokenData['scope'] = $scope->getIdentifier();
+            $tokenData['scope'][] = $scope->getIdentifier();
         }
         $tokenData['scope'] = implode(' ', $tokenData['scope']);
 
@@ -65,7 +65,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
     public function revokeAccessToken($tokenId) {
         // Initiate Model
         $tokenModel = new OAuthAccessTokenModel($this->db);
-        $tokenModel->update($tokenId, ['is_evoked' => true]);
+        $tokenModel->update($tokenId, ['is_revoked' => true]);
         // $tokenModel->delete($tokenId);
     }
 
@@ -73,6 +73,6 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
         // Initiate Model
         $tokenModel = new OAuthAccessTokenModel($this->db);
         $token      = $tokenModel->find($tokenId);
-        return $token['is_evoked'] ?? true;
+        return $token['is_revoked'] ?? true;
     }
 }

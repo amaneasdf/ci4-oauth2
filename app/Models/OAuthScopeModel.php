@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class OAuthScopeModel extends Model {
     protected $DBGroup          = 'default';
-    protected $table            = 'oauth_scopes';
-    protected $primaryKey       = 'id';
+    protected $table            = 'oauth_scope';
+    protected $primaryKey       = 'scope';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;

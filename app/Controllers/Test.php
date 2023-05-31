@@ -27,9 +27,8 @@ class Test extends BaseController {
             return $this->response
                 ->setStatusCode(500)
                 ->setJSON([
-                    'error'             => 'Error',
-                    'error_description' => get_class($th) . ' - ' . $th->getCode(),
-                    'message'           => $th->getMessage(),
+                    'error'   => 'Error',
+                    'message' => implode(':', [$th->getCode(), $th->getMessage()]),
                 ]);
         }
     }

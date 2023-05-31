@@ -37,9 +37,9 @@ class Services extends BaseService {
      */
 
     /**
-     * @param  null|\CodeIgniter\Database\ConnectionInterface $db
-     * @param  bool                                           $getShared
-     * @return \League\OAuth2\Server\AuthorizationServer
+     * @param  bool                     $getShared
+     * @param  null|ConnectionInterface $db
+     * @return AuthorizationServer
      */
     public static function oauth2Server($getShared = true,  ? ConnectionInterface $db = null) {
         if ($getShared) {
@@ -78,6 +78,11 @@ class Services extends BaseService {
         return $server;
     }
 
+    /**
+     * @param  bool                     $getShared
+     * @param  null|ConnectionInterface $db
+     * @return ResourceServer
+     */
     public static function oauth2ResServer($getShared = true,  ? ConnectionInterface $db = null) {
         if ($getShared) {
             return static::getSharedInstance('oauth2ResServer');
