@@ -33,6 +33,7 @@ $routes->get('/', 'Home::index');
 
 // Authorization request
 $routes->post('/auth-test', 'Test::index');
+$routes->post('/reso-test', 'Test::resoServer', ['filter' => 'oauth']);
 
 /*
  * --------------------------------------------------------------------

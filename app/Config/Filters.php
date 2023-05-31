@@ -2,15 +2,14 @@
 
 namespace Config;
 
-use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
-use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\Honeypot;
+use CodeIgniter\Config\BaseConfig;
+use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\SecureHeaders;
 
-class Filters extends BaseConfig
-{
+class Filters extends BaseConfig {
     /**
      * Configures aliases for Filter classes to
      * make reading things nicer and simpler.
@@ -21,6 +20,7 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
+        'oauth'         => \App\Filters\AuthFilter::class,
     ];
 
     /**
@@ -33,7 +33,7 @@ class Filters extends BaseConfig
             // 'csrf',
             // 'invalidchars',
         ],
-        'after' => [
+        'after'  => [
             'toolbar',
             // 'honeypot',
             // 'secureheaders',

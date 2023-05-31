@@ -32,4 +32,21 @@ class Test extends BaseController {
                 ]);
         }
     }
+
+    public function resoServer() {
+        $scopes = $this->request->header('X-OAuthScope')->getValue();
+        if (!is_array($scopes) || !in_array('app', $scopes)) {
+            return $this->response->setStatusCode(403);
+        }
+
+        return $this->response
+            ->setStatusCode(200)
+            ->setJSON([
+                'code'    => '000',
+                'message' => 'success',
+                'data'    => [
+                    'foo' => 'bar',
+                ],
+            ]);
+    }
 }
