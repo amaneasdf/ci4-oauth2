@@ -14,7 +14,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
     /**
      * Database connection
      *
-     * @var null|\CodeIgniter\Database\ConnectionInterface
+     * @var null|ConnectionInterface
      */
     protected $db;
 

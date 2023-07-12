@@ -11,7 +11,7 @@ class ClientRepository implements ClientRepositoryInterface {
     /**
      * Database connection
      *
-     * @var null|\CodeIgniter\Database\ConnectionInterface
+     * @var null|ConnectionInterface
      */
     protected $db;
 
@@ -21,13 +21,12 @@ class ClientRepository implements ClientRepositoryInterface {
 
     public function getClientEntity($clientIdentifier) {
         $clientModel = new OAuthClientModel($this->db);
-        $clientData  = $clientModel->find($clientIdentifier);
-        return null === $clientData ? null : new ClientEntity($clientData);
+        return $clientModel->asObject(ClientEntity::class)->find($clientIdentifier);
     }
 
     public function validateClient($clientIdentifier, $clientSecret, $grantType) {
         /**
-         * @var \App\Libraries\OAuth2\Entities\ClientEntity $client
+         * @var ClientEntity $client
          */
         $client = $this->getClientEntity($clientIdentifier);
         if (null === $client) {
@@ -39,6 +38,11 @@ class ClientRepository implements ClientRepositoryInterface {
             if (null === $clientSecret || !$client->validateSecret($clientSecret)) {
                 return false;
             }
+        }
+
+        // Other validation like client status and stuff here
+        if ($client->status !== 1) {
+            return false;
         }
 
         // validate grant
