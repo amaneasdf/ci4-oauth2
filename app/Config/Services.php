@@ -10,7 +10,9 @@ use CodeIgniter\Database\ConnectionInterface;
 use League\OAuth2\Server\AuthorizationServer;
 use App\Libraries\OAuth2\Repo\ScopeRepository;
 use App\Libraries\OAuth2\Repo\ClientRepository;
+use League\OAuth2\Server\RequestAccessTokenEvent;
 use App\Libraries\OAuth2\Repo\AccessTokenRepository;
+use App\Libraries\OAuth2\Validators\SplitTokenValidator;
 
 /**
  * Services Configuration file.
@@ -75,6 +77,12 @@ class Services extends BaseService {
                 function (RequestEvent $event) {
                     \CodeIgniter\Events\Events::trigger('oauth2.user.authentication.failed', $event);
                 }
+            )
+            ->addListener(
+                'access_token.issued',
+                function (RequestAccessTokenEvent $event) {
+                    \CodeIgniter\Events\Events::trigger('oauth2.access_token.issued', $event);
+                }
             );
 
         return $server;
@@ -90,8 +98,12 @@ class Services extends BaseService {
             return static::getSharedInstance('oauth2ResServer');
         }
 
+        // Init access token repo
+        $accessTokenRepo = new AccessTokenRepository($db);
+
+        // Init resourse server
         $publickey = new CryptKey(__DIR__ . $_ENV['encryption.openssl.public']);
-        $server    = new ResourceServer(new AccessTokenRepository($db), $publickey);
+        $server    = new ResourceServer($accessTokenRepo, $publickey, new SplitTokenValidator($accessTokenRepo));
 
         return $server;
     }
